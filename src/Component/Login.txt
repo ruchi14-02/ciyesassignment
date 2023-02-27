@@ -1,0 +1,93 @@
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import './style.css'
+
+function Login (props) {
+    // const [email, setEmail] = useState('')
+    // const [password, setPassword] = useState('')
+  const [loginUser, setLoginUser] = useState({
+    email: '',
+    password: ''
+  })
+  const [newEntry, setNewEntry] = useState([])
+
+
+  const navigate = useNavigate()
+
+  const handleSubmit = e => {
+    e.preventDefault()
+    let getData = JSON.parse(localStorage.getItem('Register'))
+    const { email, password } = getData
+    if (email === loginUser.email && password ===  loginUser.password) {
+      console.log('logged in success')
+      localStorage.setItem('login', email)
+      navigate('/Dashboard')
+
+    } else {
+      console.log('invalid login')
+    }
+    console.log('password matched login success')
+    const newRecord = { email: email, password: password }
+    setNewEntry([...newEntry, newRecord])
+    console.log(newEntry)
+    navigate('/Dashboard')
+  }
+
+  return (
+    <div>
+      <center>
+        <form className='form_size' width='300px' onSubmit={handleSubmit}>
+          <div class='form-group'>
+            <label for='exampleInputEmail1'>Email address</label>
+            <input
+              type='email'
+              value={loginUser.email}
+              onChange={e => setLoginUser(e.target.value)}
+              class='form-control form-control-sm'
+              name='email'
+              id='email'
+              autocomplete='off'
+              aria-describedby='emailHelp'
+              placeholder='Enter email'
+              width='200px'
+            />
+            <small id='emailHelp' class='form-text text-muted'>
+              We'll never share your email with anyone else.
+            </small>
+          </div>
+          <div class='form-group'>
+            <label for='exampleInputPassword1'>Password</label>
+            <input
+              type='password'
+              value={loginUser.password}
+              onChange={e => setLoginUser(e.target.value)}
+              class='form-control'
+              autocomplete='off'
+              id='password'
+              name='password'
+              placeholder='Password'
+            />
+          </div>
+
+          <br />
+          <button type='submit' class='btn btn-primary'>
+            Login
+          </button>
+        </form>
+      </center>
+      <div>
+        {newEntry.map(creElem => {
+          const { email, password } = creElem
+          return (
+            <div className='showData' key={creElem.id}>
+              <p>{creElem.email}</p>
+              <p>{creElem.password}</p>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+export default Login
